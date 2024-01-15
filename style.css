@@ -20,32 +20,30 @@ body {
 
 
 
-.info-container {
+#allPokemonContainer {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    flex-wrap: wrap;
     justify-content: center;
     align-items: center;
-    background-color: white;
-    border-top-left-radius: 60px;
-    border-top-right-radius: 60px;
-    min-height: 100px;
-    margin-top: -40px;
-    width: 500px;
-    display: none;
-}
-
-.allPokemonContainer {
+    gap: 20px;
     color: white;
 }
 
-#pokemonContainer {
+.pokemonCard {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     color: white;
-    border: solid 1px white;
-    padding: 20px;
+    border: solid 1px black;
+    gap: 20px;
+    height: 300px;
+    width: 300px;
+}
+
+.pokemonName {
+    font-size: 24px;
 }
 
 .pokemonImage {
@@ -53,3 +51,99 @@ body {
     width: 100px;
 }
 
+.pokemonTypes {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+}
+
+.pokemonType {
+    padding: 10px;
+    border: solid 1px black;
+}
+
+.pokemonId {
+    align-self: flex-end;
+}
+
+
+
+
+
+
+
+.normalBackground {
+    background-color: #a8a878;
+}
+
+.fightingBackground {
+    background-color: #c03028;
+}
+
+.flyingBackground {
+    background-color: #a890f0;
+}
+
+.poisonBackground {
+    background-color: #a040a0;
+}
+
+.groundBackground {
+    background-color: #e0c068;
+}
+
+.rockBackground {
+    background-color: #b8a038;
+}
+
+.bugBackground {
+    background-color: #a8b820;
+}
+
+.ghostBackground {
+    background-color: #705898;
+}
+
+.steelBackground {
+    background-color: #b8b8d0;
+}
+
+.fireBackground {
+    background-color: #f08030;
+}
+
+.waterBackground {
+    background-color: #6890f0;
+}
+
+.grassBackground {
+    background-color: #78c850;
+}
+
+.electricBackground {
+    background-color: #f8d030;
+}
+
+.psychicBackground {
+    background-color: #f85888;
+}
+
+.iceBackground {
+    background-color: #98d8d8;
+}
+
+.dragonBackground {
+    background-color: #7038f8;
+}
+
+.darkBackground {
+    background-color: #705848;
+}
+
+.fairyBackground {
+    background-color: #ee99ac;
+}
+
+.defaultBackground {
+    background-color: #ccc;
+}
