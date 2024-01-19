@@ -5,14 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pokedex</title>
     <link rel="stylesheet" href="style.css">
-
 </head>
 
 <body onload="loadPokemon()">
 
     <div id="header" class="sticky">
         <h1>The Pokedex</h1>
+        <input type="text" id="searchBar" placeholder="Search Pokemon by name" oninput="filterPokemon()">
     </div>
+    
+
+    <div id="loadingSpinner" class="loading-spinner"></div>
+
 
     <div id="allPokemonContainer"></div>
 
@@ -20,8 +24,7 @@
 
     <div id="loadMoreButtonContainer"></div>
 
-    <script src="script.js" ></script>
     <script src="templates.js"></script>
-
+    <script src="script.js" ></script>
 </body>
 </html>

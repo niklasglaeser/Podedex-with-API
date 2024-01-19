@@ -15,7 +15,6 @@ body {
     justify-content: center;
     align-items: center;
     background-color: #212121;
-    padding: 10px;
     color: white;
     position: fixed;
     width: 100%;
@@ -23,6 +22,20 @@ body {
     z-index: 1000;
 }
 
+#header h1 {
+    margin-bottom: 6px;
+}
+
+#header input {
+    height: 20px;
+    width: 200px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+}
+
+#header input::placeholder {
+    padding-left: 10px;
+}
 
 #allPokemonContainer {
     display: flex;
@@ -32,7 +45,7 @@ body {
     align-items: center;
     gap: 20px;
     color: white;
-    padding-top: 50px;
+    padding-top: 70px;
     padding-left: 30px;
     padding-right: 30px;
 }
@@ -69,10 +82,11 @@ body {
 }
 
 .pokemonType {
-    padding: 10px;
+    padding: 7px;
     margin-top: 15px;
     border: solid 1px black;
     border-radius: 10%;
+    font-size: 14px;
 }
 
 .pokemonId {
@@ -105,7 +119,7 @@ body {
     position: absolute;
     z-index: 900;
     top: 0;
-    margin-top: 100px;
+    margin-top: 140px;
 }
 
 .pokemonCardBig {
@@ -114,7 +128,7 @@ body {
     align-items: center;
     border-radius: 10%;
     border: solid 3px black;
-    height: 700px;
+    height: 650px;
     width: 400px;
 }
 
@@ -176,11 +190,12 @@ body {
 
 .bigCardButtons button:hover {
     cursor: pointer;
+    filter: invert(100%);
 }
 
 .pokemonImageBig {
-    height: 250px;
-    width: 250px;
+    height: 220px;
+    width: 220px;
     z-index: 800;
 }
 
@@ -271,7 +286,6 @@ body {
     color: white;
 }
 
-
 .moveName {
     border: solid 1px black;
     padding: 5px;
@@ -279,12 +293,7 @@ body {
     font-weight: 500;
 }
 
-.nextArrow {
-    height: 30px;
-    width: 30px;
-}
-
-.previousArrow {
+.previousNext {
     height: 30px;
     width: 30px;
 }
@@ -372,32 +381,155 @@ body {
     background-color: #ccc;
 }
 
-
-
 .no-scroll {
     overflow: hidden;
+}
+
+.sticky {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
 
 .blur {
-    filter: blur(5px);
-}
-
-.no-scroll {
-    overflow: hidden;
+    filter: blur(10px);
 }
 
 @media (max-width: 420px) {
 
+    .pokemonCard {
+        height: 250px;
+        width: 250px;
+    }
+
     .pokemonCardBig {
-        width: 300px;
+        width: 250px;
+        height: 550px;
+        margin-top: 20px;
     }
 
     .pokemonNameBig {
-        font-size: 24px;
+        font-size: 20px;
     }
 
     .pokemonIdBig {
-        font-size: 24px;
+        font-size: 20px;
     }
+
+    .pokemonImage {
+        height: 120px;
+        width: 120px;
+    }
+
+    .pokemonType {
+        font-size: 12px;
+    }
+
+    .pokemonImageBig {
+        height: 150px;
+        width: 150px;
+    }
+
+    .pokemonTypesBig {
+        font-size: 12px;
+    }
+
+    .bigCardHeader {
+        margin-bottom: 10px;
+    }
+
+    .bigCardButtons {
+        margin-top: 10px;
+    }
+
+    .previousNext {
+        height: 20px;
+        width: 20px;
+    }
+
+    .closeButton {
+        height: 25px;
+        width: 25px;
+    }
+
+    .bigCardMenu {
+        font-size: 14px;
+    }
+
+    .baseStatInfo {
+        font-size: 10px;
+        margin-right: 40px;
+        margin-left: 40px;
+    }
+
+    .aboutInfo {
+        margin-top: 10px;
+        margin-left: 20px;
+        margin-right: 20px;
+    }
+
+    .movesContainer {
+        margin-left: 10px;
+        margin-right: 0;
+        width: 200px;
+        height: 160px;
+    }
+
+    .sticky {
+        display: flex;
+        flex-direction: column;
+        padding-bottom: 20px;
+    }
+
+}
+
+@media (min-width: 1440px) {
+    
+    #allPokemonContainer {
+        margin-left: 200px;
+        margin-right: 200px;
+    }
+}
+
+@media (min-width: 1920px) {
+    
+    #allPokemonContainer {
+        margin-left: 500px;
+        margin-right: 500px;
+    }
+}
+
+
+.loading-spinner {
+    border: 8px solid #f3f3f3;
+    border-top: 8px solid #3498db;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: none;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+
+body::-webkit-scrollbar {
+    width: 10px;
+}
+
+body::-webkit-scrollbar-thumb {
+    background-color: white;
+    border-radius: 10px;
+}
+
+body::-webkit-scrollbar-track {
+    background-color: #212121;
 }

@@ -2,14 +2,33 @@ let allPokemon;
 let offset = 0;
 let limit = 30;
 let currentPokemonData;
-
+let isBigCardOpen = false;
 
 async function loadPokemon() {
+    document.getElementById('allPokemonContainer').style.display = 'none';
+    document.getElementById('loadMoreButtonContainer').style.display = 'none';
+    document.getElementById('bigCardContainer').style.display = 'none';
+
+    showLoadingSpinner();
+
     let url = `https://pokeapi.co/api/v2/pokemon?limit=${limit}&offset=${offset}`;
     let response = await fetch(url);
     allPokemon = await response.json();
 
     await renderAllPokemon();
+
+    document.getElementById('loadingSpinner').style.display = 'none';
+    document.getElementById('allPokemonContainer').style.display = 'flex';
+    document.getElementById('loadMoreButtonContainer').style.display = 'block';
+}
+
+
+window.onload = async function() {
+    await loadPokemon();
+};
+
+function showLoadingSpinner() {
+    document.getElementById('loadingSpinner').style.display = 'block';
 }
 
 async function renderAllPokemon() {
@@ -23,7 +42,7 @@ async function renderAllPokemon() {
         const type = types[0].type.name;
 
         const pokemonCard = pokemonCardTemplate(pokemonData, typesDivs);
-        const coloredPokemonCard = `<div onClick="openBigCard(${pokemonData.id})" class="pokemonCard ${type}Background">${pokemonCard}</div>`;
+        const coloredPokemonCard = `<div ${isBigCardOpen ? 'style="pointer-events: none;"' : ''} onClick="openBigCard(${pokemonData.id})" class="pokemonCard ${type}Background">${pokemonCard}</div>`;
 
         allPokemonContainer.innerHTML += coloredPokemonCard;
     }
@@ -59,23 +78,37 @@ async function getPokemonTypes(pokemonData) {
 }
 
 async function openBigCard(pokemonId) {
+    if (isBigCardOpen) {
+        return;
+    }
+    isBigCardOpen = true;
+
     const pokemonData = await getPokemonDetails(`https://pokeapi.co/api/v2/pokemon/${pokemonId}`);
     const typesDivs = await getPokemonTypes(pokemonData);
 
     renderBigCard(pokemonData, typesDivs);
-
     const scrollY = window.scrollY || document.documentElement.scrollTop;
-
     const bigCardContainer = document.getElementById('bigCardContainer');
     bigCardContainer.style.top = `${scrollY}px`;
 
     document.body.classList.add('no-scroll');
     document.getElementById('allPokemonContainer').classList.add('blur');
     bigCardContainer.style.display = 'flex';
+
+    document.addEventListener('click', closeBigCardOnClickOutside);
+
 }
 
+function closeBigCardOnClickOutside(event) {
+    const bigCardContainer = document.getElementById('bigCardContainer');
+    if (!bigCardContainer.contains(event.target)) {
+        closeBigCard();
+        document.removeEventListener('click', closeBigCardOnClickOutside);
+    }
+}
 
 function closeBigCard() {
+    isBigCardOpen = false;
     document.body.classList.remove('no-scroll');
     document.getElementById('allPokemonContainer').classList.remove('blur');
 
@@ -94,53 +127,6 @@ async function renderBigCard(pokemonData, typesDivs) {
     
     currentPokemonData = pokemonData;
 }
-
-
-function pokemonCardTemplate(pokemonData, typeDivs) {
-    const pokemonNameCaps = pokemonData.name.toUpperCase();
-
-    return `
-        <div class="pokemonCard" data-id="${pokemonData.id}">
-            <div class="pokemonName">${pokemonNameCaps}</div>
-            <div class="pokemonTypes">${typeDivs}</div>
-            <img class="pokemonImage" src="${pokemonData.sprites.other['official-artwork'].front_default}">
-            <div class="pokemonId">${pokemonData.id}</div>
-        </div>
-    `;
-}
-
-function pokemonCardTemplateBig(pokemonData, typesDivs) {
-    const pokemonNameCaps = pokemonData.name.toUpperCase();
-    const type = pokemonData.types[0].type.name;
-
-    return `
-        <div class="pokemonCardBig ${type}Background">
-            <div class="bigCardButtons">
-                <button onClick="showPreviousPokemon(${pokemonData.id})"><img class="previousArrow"src="img/previous.png"></button>
-                <button onClick="closeBigCard()"><img class="closeButton"src="img/close.png"></button>
-                <button onClick="showNextPokemon(${pokemonData.id})"><img class="nextArrow"src="img/next.png"></button>
-            </div>
-            <div class="bigCardHeader">
-                <div class="bigCardNameTypes">
-                    <div class="pokemonNameBig">${pokemonNameCaps}</div>
-                    <div class="pokemonTypesBig">${typesDivs}</div>
-                </div>
-                <div class="pokemonIdBig">${pokemonData.id}</div>
-            </div>
-            <img class="pokemonImageBig" src="${pokemonData.sprites.other['official-artwork'].front_default}">
-            <div class="bigCardBottom">
-                <div class="bigCardMenu">
-                    <div onClick="renderAbout(currentPokemonData)">About</div>
-                    <div onClick="renderBaseStats(currentPokemonData)">Base Stats</div>
-                    <div onClick="renderMoves(currentPokemonData)">Moves</div>
-                </div>
-                <div id="bigCardBottomInfosContainer"></div>
-            </div>
-        </div>
-    `;
-}
-
-
 
 async function showPreviousPokemon(currentPokemonId) {
     const totalPokemonCount = allPokemon.count - 290;
@@ -169,7 +155,6 @@ async function showNextPokemon(currentPokemonId) {
     await updateBigCard(nextPokemonId);
 }
 
-
 async function updateBigCard(pokemonId) {
     const pokemonData = await getPokemonDetails(`https://pokeapi.co/api/v2/pokemon/${pokemonId}`);
     const typesDivs = await getPokemonTypes(pokemonData);
@@ -177,17 +162,18 @@ async function updateBigCard(pokemonId) {
     renderBigCard(pokemonData, typesDivs);
 }
 
+
 function renderAbout(currentPokemonData) {
     const bigCardBottomInfosContainer = document.getElementById('bigCardBottomInfosContainer');
 
     const height = currentPokemonData.height;
     const weight = currentPokemonData.weight;
 
-    let abilitiesString = '';
+    let abilities = '';
     for (let i = 0; i < currentPokemonData.abilities.length; i++) {
-        abilitiesString += currentPokemonData.abilities[i].ability.name;
+        abilities += currentPokemonData.abilities[i].ability.name;
         if (i < currentPokemonData.abilities.length - 1) {
-            abilitiesString += ', ';
+            abilities += ', ';
         }
     }
 
@@ -203,7 +189,7 @@ function renderAbout(currentPokemonData) {
             </div>
             <div class="aboutInfo">
                 <div class="aboutTitle">Abilities</div>
-                <div class="aboutValue">${abilitiesString}</div>
+                <div class="aboutValue">${abilities}</div>
             </div>
         </div>
     `;
@@ -264,3 +250,20 @@ async function renderMoves(currentPokemonData) {
     bigCardBottomInfosContainer.innerHTML = movesContainer;
 }
 
+
+function filterPokemon() {
+    const searchInput = document.getElementById('searchBar').value.toLowerCase();
+    const pokemonCards = document.getElementsByClassName('pokemonCard');
+
+    for (let i = 0; i < pokemonCards.length; i++) {
+        const card = pokemonCards[i];
+        const pokemonName = card.getElementsByClassName('pokemonName')[0].textContent.toLowerCase();
+
+        if (pokemonName.includes(searchInput)) {
+            card.style.display = 'flex';
+        } else {
+            card.style.display = 'none';
+        }
+    }
+    loadMoreButton.style.display = 'none';
+}
